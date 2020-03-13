@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GW2 Kill/Death</title>
+    <meta name="description" content="Guild Wars 2 Kill/Death" />
+    <meta name="author" content="Saber Lily.1960" />
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
+  </head>
+  <body class="has-navbar-fixed-bottom">
+    <div id="app">
+      <nav class="navbar is-fixed-bottom" role="navigation" aria-label="main navigation" v-if="worldsDataList != null && matchesDataList != null">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="https://gw2skr.com/kdr.html">
+            <img src="https://wiki.guildwars2.com/images/6/69/User_Infinite_Guild_Wars_2_logo_text.png" width="112" height="28" />
+          </a>
+          <a role="button" class="navbar-burger burger" aria-expanded="false" data-target="navMenu" aria-label="menu" @click="toggleNavMenu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div ref="navMenu" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" @click="scrollBackToTop">
+              Back to Top
+            </a>
+          </div>
+          <div class="navbar-end">
+            <a class="navbar-item has-text-danger">{{ computedWorlds[this.currentMatchID]['red'].join(', ') }} {{ this.matchesDataList[this.currentMatchID]['victory_points']['red'] }}</a>
+            <a class="navbar-item has-text-info">{{ computedWorlds[this.currentMatchID]['blue'].join(', ') }} {{ this.matchesDataList[this.currentMatchID]['victory_points']['blue'] }}</a>
+            <a class="navbar-item has-text-success">{{ computedWorlds[this.currentMatchID]['green'].join(', ') }} {{ this.matchesDataList[this.currentMatchID]['victory_points']['green'] }}</a>
+          </div>
+        </div>
+      </nav>
+      <section class="section">
+        <div class="container">
+          <h1 class="title">Guild Wars 2 Kill/Death</h1>
+          <p class="subtitle">GW2 WvW KDR <strong>Per Hour</strong>! by Saber Lily.1960</p>
+
+          <div class="select">
+            <select v-model="currentUtcOffset">
+              <option disabled value="">Select Time Zone (UTC offset)</option>
+              <option value="-12">UTC−12:00, Y</option>
+              <option value="-11">UTC−11:00, X</option>
+              <option value="-10">UTC−10:00, W</option>
+              <!-- <option value="-570">UTC−09:30, V†</option> -->
+              <option value="-9">UTC−09:00, V</option>
+              <option value="-8">UTC−08:00, U (USA Pacific Time)</option>
+              <option value="-7">UTC−07:00, T</option>
+              <option value="-6">UTC−06:00, S (USA Central Time)</option>
+              <option value="-5">UTC−05:00, R (USA Eastern Time)</option>
+              <option value="-4">UTC−04:00, Q</option>
+              <!-- <option value="-210">UTC−03:30, P†</option> -->
+              <option value="-3">UTC−03:00, P</option>
+              <option value="-2">UTC−02:00, O</option>
+              <option value="-1">UTC−01:00, N</option>
+              <option value="0">UTC±00:00, Z</option>
+              <option value="1">UTC+01:00, A (Central European Time)</option>
+              <option value="2">UTC+02:00, B</option>
+              <option value="3">UTC+03:00, C (Russia Moscow Time)</option>
+              <!-- <option value="210">UTC+03:30, C†</option> -->
+              <option value="4">UTC+04:00, D</option>
+              <!-- <option value="270">UTC+04:30, D†</option> -->
+              <option value="5">UTC+05:00, E</option>
+              <!-- <option value="330">UTC+05:30, E†</option> -->
+              <!-- <option value="345">UTC+05:45, E*</option> -->
+              <option value="6">UTC+06:00, F</option>
+              <!-- <option value="390">UTC+06:30, F†</option> -->
+              <option value="7">UTC+07:00, G</option>
+              <option value="8">UTC+08:00, H (China)</option>
+              <!-- <option value="525">UTC+08:45, H*</option> -->
+              <option value="9">UTC+09:00, I (Japan, SouthKorea)</option>
+              <!-- <option value="570">UTC+09:30, I† (Australian Central Standard Time)</option> -->
+              <option value="10">UTC+10:00, K</option>
+              <!-- <option value="630">UTC+10:30, K†</option> -->
+              <option value="11">UTC+11:00, L</option>
+              <option value="12">UTC+12:00, M</option>
+              <!-- <option value="765">UTC+12:45, M*</option> -->
+              <option value="13">UTC+13:00, M†</option>
+              <option value="14">UTC+14:00, M†</option>
+            </select>
+          </div>
+
+          <div v-if="worldsDataList != null && matchesDataList != null">
+            <div class="content">
+              <div class="tabs">
+                <ul>
+                  <li v-for="(match, matchID) in matchesDataList" v-bind:class="{ 'is-active' : matchID === currentMatchID }">
+                    <a @click="currentMatchID = matchID">{{ matchID.replace('1-', 'NA T').replace('2-', 'EU T') }}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Time UTC Offset {{ currentUtcOffset }} (h/m)</th>
+                    <th class="is-danger"><abbr :title="computedWorlds[this.currentMatchID]['red'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["red"][0] }}</abbr></th>
+                    <th class="is-info"><abbr :title="computedWorlds[this.currentMatchID]['blue'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["blue"][0] }}</abbr></th>
+                    <th class="is-success"><abbr :title="computedWorlds[this.currentMatchID]['green'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["green"][0] }}</abbr></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="skirmish in matchesDataList[currentMatchID]['skirmishes']" :key="skirmish.id">
+                    <td>{{ skirmish.id }}</td>
+                    <!-- <td>{{ skirmish.start_time.substring(5, 16).replace("T", " · ") }}</td> -->
+                    <td>{{ utcOffsetTime(skirmish.start_time) }}</td>
+                    <td class="has-text-danger">{{ skirmish.kills.red }} / {{ skirmish.deaths.red }} ({{ (skirmish.kills.red/skirmish.deaths.red).toFixed(2) }})</td>
+                    <td class="has-text-info">{{ skirmish.kills.blue }} / {{ skirmish.deaths.blue }} ({{ (skirmish.kills.blue/skirmish.deaths.blue).toFixed(2) }})</td>
+                    <td class="has-text-success">{{ skirmish.kills.green }} / {{ skirmish.deaths.green }} ({{ (skirmish.kills.red/skirmish.deaths.green).toFixed(2) }})</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div v-else>
+            <p>Loading Data...</p>
+          </div>
+          <!-- <div>{{worldsDataList}}</div> -->
+          <!-- <div>{{matchesDataList}}</div> -->
+        </div>
+      </section>
+    </div>
+    <script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/axios@0.19.2/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.22/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.22/plugin/utc.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          worldsDataList: null,
+          matchesDataList: null,
+          currentMatchID: "1-1",
+          currentUtcOffset: 0
+        },
+        methods: {
+          getWorldsData() {
+            axios.get("worlds.json").then(response => (this.worldsDataList = response.data));
+          },
+          getMatchesData() {
+            axios.get("matches.json").then(response => (this.matchesDataList = response.data));
+          },
+          toggleNavMenu() {
+            this.$refs.navMenu.classList.toggle("is-active");
+          },
+          scrollBackToTop() {
+            window.scrollTo(0, 0);
+          },
+          utcOffsetTime(time) {
+            return dayjs
+              .utc(time)
+              .utcOffset(this.currentUtcOffset)
+              .format("MM-DD HH:mm");
+          }
+        },
+        computed: {
+          computedWorlds: function() {
+            var worlds = {};
+            for (let i in this.matchesDataList) {
+              worlds[i] = {};
+              for (let j in this.matchesDataList[i]["all_worlds"]) {
+                worlds[i][j] = [];
+                // for (let k in this.matchesDataList[i]["all_worlds"][j]) {
+                //   worlds[i][j].push(this.worldsDataList[this.matchesDataList[i]["all_worlds"][j][k]]["name"]);
+                // }
+                this.matchesDataList[i]["all_worlds"][j].forEach(element => {
+                  worlds[i][j].unshift(this.worldsDataList[element]["name"]);
+                });
+              }
+            }
+            return worlds;
+          }
+        },
+        created() {
+          axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+          dayjs.extend(window.dayjs_plugin_utc);
+          this.getWorldsData();
+          this.getMatchesData();
+        }
+      });
+    </script>
+  </body>
+</html>
