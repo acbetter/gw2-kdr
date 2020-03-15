@@ -64,9 +64,12 @@ def loop_data():
     for i in r.json():
         # check na/eu reset datetime
         print(get_now_iso(), 'check na/eu reset datetime', i['end_time'])
-        if parse_iso(now_iso) > parse_iso(i['end_time']):
+        # todo: try to fix reset bug #1
+        # if parse_iso(now_iso) > parse_iso(i['end_time']):
+        if parse_iso(now_iso) > parse_iso(data_matches[i['id']]['end_time']):
             # update reset data
             print(get_now_iso(), 'update reset data')
+            data_matches[i['id']] = {}
             data_matches[i['id']] = {
                 'start_time': i['start_time'],
                 'end_time': i['end_time'],
