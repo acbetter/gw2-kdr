@@ -76,7 +76,7 @@ For me, I use root account (not recommand, it's unsafe) and nginx server at path
 If you need clean up.
 
 ```bash
-rm -rf gw2_kdr.py
+rm -rf kdr.py
 rm -rf matches.json worlds.json
 ```
 
@@ -88,4 +88,4 @@ For major changes, please open an issue first to discuss what you would like to 
 
 ## License
 
-[GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/).
+[GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
