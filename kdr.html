@@ -98,7 +98,7 @@
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Time UTC Offset {{ currentUtcOffset }} (h/m)</th>
+                    <th>Time UTC {{ currentUtcOffset }} (h/m)</th>
                     <th class="is-danger"><abbr :title="computedWorlds[this.currentMatchID]['red'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["red"][0] }}</abbr></th>
                     <th class="is-info"><abbr :title="computedWorlds[this.currentMatchID]['blue'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["blue"][0] }}</abbr></th>
                     <th class="is-success"><abbr :title="computedWorlds[this.currentMatchID]['green'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["green"][0] }}</abbr></th>
