@@ -2,7 +2,7 @@
 
 GW2 KDR is a online tool for checking the kill/death of each world per hour.
 
-Coded by Saber Lily.1960 (acbetter@github). 
+Coded by Saber Lily.1960 [acbetter@github](https://github.com/acbetter).
 
 Powered by [Python](https://www.python.org/), [Vue.js](https://github.com/vuejs/vue) and [Day.js](https://github.com/iamkun/dayjs/). Thanks to [axios](https://github.com/axios/axios) and [Bulma](https://bulma.io/).
 
@@ -26,7 +26,7 @@ python -m SimpleHTTPServer
 
 ## Server Deploy
 
-You need prepare a web server. I use CentOS and Python 3.7.6 here.
+You need prepare a web server. I use CentOS 7 and Python 3.7.6 here.
 
 ```bash
 yum update -y
@@ -46,6 +46,7 @@ And use these commands to check.
 ```bash
 python3.7 -V
 pip3.7 -V
+pip3.7 install requests
 ```
 
 I use crontab for run this script per hour.
@@ -66,6 +67,14 @@ Then type command `crontab -e` to set up crontab and type command `crontab -l` t
 ```
 
 For me, I use root account (not recommand, it's unsafe) and nginx server at path `/www/gw2skr/` to deploy at [https://gw2skr.com/kdr.html](https://gw2skr.com/kdr.html).
+
+Download newest script.
+
+```bash
+wget https://raw.githubusercontent.com/acbetter/gw2-kdr/master/kdr.py
+```
+
+Set crontab tasks.
 
 ```bash
 0 * * * * cd /root && python3.7 kdr.py
