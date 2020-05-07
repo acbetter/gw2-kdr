@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GW2 Kill/Death</title>
-    <meta name="description" content="Guild Wars 2 Kill/Death" />
+    <title>Guild Wars 2 WvW Kill/Death Per Hour</title>
+    <meta name="description" content="Guild Wars 2 WvW Kill/Death Per Hour" />
     <meta name="author" content="Saber Lily.1960" />
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
   </head>
@@ -36,8 +36,9 @@
       </nav>
       <section class="section">
         <div class="container">
-          <h1 class="title">Guild Wars 2 Kill/Death</h1>
-          <p class="subtitle">GW2 WvW KDR <strong>Per Hour</strong>! by Saber Lily.1960</p>
+          <h1 class="title">Guild Wars 2 WvW Server Kill/Death(KDR) Per Hour</h1>
+          <p></p>
+          <p class="subtitle">激战2 各服务器 每小时击杀数据统计 by Saber Lily.1960 <a href="https://github.com/acbetter/gw2-kdr" target="_blank">@GitHub</a></p>
 
           <div class="select">
             <select v-model="currentUtcOffset">
@@ -86,7 +87,7 @@
           <div v-if="worldsDataList != null && matchesDataList != null">
             <div class="content">
               <div class="tabs">
-                <ul>
+                <ul style="margin-left: 0em;">
                   <li v-for="(match, matchID) in matchesDataList" v-bind:class="{ 'is-active' : matchID === currentMatchID }">
                     <a @click="currentMatchID = matchID">{{ matchID.replace('1-', 'NA T').replace('2-', 'EU T') }}</a>
                   </li>
@@ -98,7 +99,7 @@
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Time UTC {{ currentUtcOffset }} (h/m)</th>
+                    <th>UTC {{ currentUtcOffset }} (h/m)</th>
                     <th class="is-danger"><abbr :title="computedWorlds[this.currentMatchID]['red'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["red"][0] }}</abbr></th>
                     <th class="is-info"><abbr :title="computedWorlds[this.currentMatchID]['blue'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["blue"][0] }}</abbr></th>
                     <th class="is-success"><abbr :title="computedWorlds[this.currentMatchID]['green'].join(', ') + ' Kill/Death'">{{ computedWorlds[this.currentMatchID]["green"][0] }}</abbr></th>
@@ -136,14 +137,14 @@
           worldsDataList: null,
           matchesDataList: null,
           currentMatchID: "1-1",
-          currentUtcOffset: 0
+          currentUtcOffset: 0,
         },
         methods: {
           getWorldsData() {
-            axios.get("worlds.json").then(response => (this.worldsDataList = response.data));
+            axios.get("worlds.json").then((response) => (this.worldsDataList = response.data));
           },
           getMatchesData() {
-            axios.get("matches.json").then(response => (this.matchesDataList = response.data));
+            axios.get("matches.json").then((response) => (this.matchesDataList = response.data));
           },
           toggleNavMenu() {
             this.$refs.navMenu.classList.toggle("is-active");
@@ -152,14 +153,11 @@
             window.scrollTo(0, 0);
           },
           utcOffsetTime(time) {
-            return dayjs
-              .utc(time)
-              .utcOffset(this.currentUtcOffset)
-              .format("MM-DD HH:mm");
-          }
+            return dayjs.utc(time).utcOffset(this.currentUtcOffset).format("MM-DD HH:mm");
+          },
         },
         computed: {
-          computedWorlds: function() {
+          computedWorlds: function () {
             var worlds = {};
             for (let i in this.matchesDataList) {
               worlds[i] = {};
@@ -168,20 +166,20 @@
                 // for (let k in this.matchesDataList[i]["all_worlds"][j]) {
                 //   worlds[i][j].push(this.worldsDataList[this.matchesDataList[i]["all_worlds"][j][k]]["name"]);
                 // }
-                this.matchesDataList[i]["all_worlds"][j].forEach(element => {
+                this.matchesDataList[i]["all_worlds"][j].forEach((element) => {
                   worlds[i][j].unshift(this.worldsDataList[element]["name"]);
                 });
               }
             }
             return worlds;
-          }
+          },
         },
         created() {
           axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
           dayjs.extend(window.dayjs_plugin_utc);
           this.getWorldsData();
           this.getMatchesData();
-        }
+        },
       });
     </script>
   </body>
