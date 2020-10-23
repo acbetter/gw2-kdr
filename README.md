@@ -6,6 +6,8 @@ Coded by Saber Lily.1960 [acbetter@github](https://github.com/acbetter).
 
 Powered by [Python](https://www.python.org/), [Vue.js](https://github.com/vuejs/vue) and [Day.js](https://github.com/iamkun/dayjs/). Thanks to [axios](https://github.com/axios/axios) and [Bulma](https://bulma.io/).
 
+View Online Demo: [https://voidpin.com/tools/kdr/](https://voidpin.com/tools/kdr/)
+
 ## Debug
 
 You need install Python 3.7.x first. The script have some bugs in Python 3.6.x.
@@ -24,9 +26,71 @@ python3 -m http.server
 python -m SimpleHTTPServer
 ```
 
-## Server Deploy
+## Server Deploy for Debian 10
 
-You need prepare a web server. I use CentOS 7 and Python 3.7.6 here.
+You need prepare a web server. I use Debian 10 and Python 3.7.3 here.
+
+Use these commands to check.
+
+```bash
+which python3
+python3 -V
+
+which pip3
+pip3 -V
+pip3 install requests
+```
+
+I use crontab for run this script per hour.
+
+> In my Debian 10, cron is installed by default. However, if it is not installed on your machine, run the following few commands on the terminal with root privileges. [scource](https://vitux.com/how-to-setup-a-cron-job-in-debian-10/)
+
+```bash
+apt-get update
+apt-get install cron
+```
+
+First of all, we need download the script.
+
+```bash
+cd ~
+git clone https://github.com/acbetter/gw2-kdr.git
+```
+
+Then type command `crontab -e` to set up crontab tasks and type command `crontab -l` to check.
+
+```bash
+1 * * * * cd /path/to/script && /usr/bin/python3 kdr.py
+3 * * * * yes | cp /path/to/script/matches.json /path/to/nginx/dir/matches.json
+3 * * * * yes | cp /path/to/script/worlds.json /path/to/nginx/dir/worlds.json
+```
+
+For me, I use root account (not recommand, it's unsafe) and candy server at path `/var/www/api/` to deploy at [https://gw2skr.com/kdr.html](https://gw2skr.com/kdr.html).
+
+```bash
+1 * * * * cd /root/gw2-kdr/ && /usr/bin/python3 kdr.py
+3 * * * * yes | cp /root/gw2-kdr/matches.json /var/www/api/matches.json
+3 * * * * yes | cp /root/gw2-kdr/worlds.json /var/www/api/worlds.json
+```
+
+If you need clean up.
+
+```bash
+rm -rf kdr.py
+rm -rf matches.json worlds.json
+```
+
+I use crontab for run this script per hour.
+
+```bash
+systemctl start cron
+systemctl enable cron
+systemctl status cron
+```
+
+## Server Deploy for CentOS 7
+
+If you use CentOS 7, here's a way to install Python 3.7.x
 
 ```bash
 yum update -y
@@ -58,36 +122,7 @@ systemctl enable crond
 systemctl status crond
 ```
 
-Then type command `crontab -e` to set up crontab and type command `crontab -l` to check.
-
-```bash
-0 * * * * cd /path/to/script && python3.7 kdr.py
-5 * * * * yes | cp /path/to/script/matches.json /path/to/nginx/dir/matches.json
-5 * * * * yes | cp /path/to/script/worlds.json /path/to/nginx/dir/worlds.json
-```
-
-For me, I use root account (not recommand, it's unsafe) and nginx server at path `/www/gw2skr/` to deploy at [https://gw2skr.com/kdr.html](https://gw2skr.com/kdr.html).
-
-Download newest script.
-
-```bash
-wget https://raw.githubusercontent.com/acbetter/gw2-kdr/master/kdr.py
-```
-
-Set crontab tasks.
-
-```bash
-0 * * * * cd /root && python3.7 kdr.py
-5 * * * * yes | cp /root/matches.json /www/gw2skr/matches.json
-5 * * * * yes | cp /root/worlds.json /www/gw2skr/worlds.json
-```
-
-If you need clean up.
-
-```bash
-rm -rf kdr.py
-rm -rf matches.json worlds.json
-```
+The rest is the same as Debian 10.
 
 ## Contributing
 
