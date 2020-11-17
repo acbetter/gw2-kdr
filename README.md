@@ -2,11 +2,11 @@
 
 GW2 KDR is a online tool for checking the kill/death of each world per hour.
 
-Coded by Saber Lily.1960 [acbetter@github](https://github.com/acbetter).
+Coded by Saber Lily.1960 aka [acbetter@github](https://github.com/acbetter).
 
 Powered by [Python](https://www.python.org/), [Vue.js](https://github.com/vuejs/vue) and [Day.js](https://github.com/iamkun/dayjs/). Thanks to [axios](https://github.com/axios/axios) and [Bulma](https://bulma.io/).
 
-View Online Demo: [https://voidpin.com/tools/kdr/](https://voidpin.com/tools/kdr/)
+View Online Demo: [https://voidpin.com/tools/wvw-server-kdr/](https://voidpin.com/tools/wvw-server-kdr/)
 
 ## Debug
 
